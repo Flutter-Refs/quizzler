@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:quizzler/question.dart';
+import 'package:quizzler/quiz.dart';
 
 void main() {
   runApp(Quizzler());
@@ -33,28 +33,7 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> score = [];
-  List<Question> questions = [
-    Question(
-      text: "Did the math book look sad because it had too many problems?",
-      answer: true,
-    ),
-    Question(
-      text: "Is it possible to \"accidentally\" laugh and snort milk out of your nose?",
-      answer: true,
-    ),
-    Question(
-      text: "Can you tickle yourself and genuinely find it funny?",
-      answer: false,
-    ),
-    Question(
-      text: "Did the tomato turn red because it saw the salad dressing?",
-      answer: false,
-    ),
-    Question(
-      text: "Is it possible to trust a burrito entirely?",
-      answer: true,
-    ),
-  ];
+  Quiz quiz = Quiz();
 
   int questionIndex = 0;
 
@@ -70,7 +49,7 @@ class _QuizPageState extends State<QuizPage> {
               padding: EdgeInsets.all(10.0),
               child: Center(
                 child: Text(
-                  questions[questionIndex].text,
+                  quiz.getQuestionText(questionIndex),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 25.0,
@@ -128,7 +107,7 @@ class _QuizPageState extends State<QuizPage> {
 
   void answerQuestion(bool answer) {
     score.add(
-      questions[questionIndex].answer == answer
+      quiz.getQuestionAnswer(questionIndex) == answer
           ? Icon(
               Icons.check,
               color: Colors.green,
@@ -139,7 +118,7 @@ class _QuizPageState extends State<QuizPage> {
             ),
     );
 
-    if (questions.length > questionIndex + 1) {
+    if (quiz.getNumberOfQuestions > questionIndex + 1) {
       questionIndex++;
     }
   }
