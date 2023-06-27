@@ -1,6 +1,9 @@
 import 'package:quizzler/question.dart';
 
 class Quiz {
+  bool _quizFinished = false;
+  int _questionIndex = 0;
+
   final List<Question> _questions = [
     Question(text: 'Some cats are actually allergic to humans', answer: true),
     Question(text: 'You can lead a cow down stairs but not up stairs.', answer: false),
@@ -17,9 +20,17 @@ class Quiz {
     Question(text: 'In West Virginia, USA, if you accidentally hit an animal with your car, you are free to take it home to eat.', answer: true),
   ];
 
-  int get getNumberOfQuestions => _questions.length;
+  String get getQuestionText => _questions[_questionIndex].text;
 
-  String getQuestionText(int questionIndex) => _questions[questionIndex].text;
+  bool get getQuestionAnswer => _questions[_questionIndex].answer;
 
-  bool getQuestionAnswer(int questionIndex) => _questions[questionIndex].answer;
+  bool get isQuizFinished => _quizFinished;
+
+  void nextQuestion() {
+    if (_questions.length > _questionIndex + 1) {
+      _questionIndex++;
+    } else {
+      _quizFinished = true;
+    }
+  }
 }

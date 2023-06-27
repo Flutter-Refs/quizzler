@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:quizzler/quiz.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 void main() {
   runApp(Quizzler());
@@ -32,10 +33,8 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  List<Icon> score = [];
-  Quiz quiz = Quiz();
-
-  int questionIndex = 0;
+  List<Icon> _score = [];
+  Quiz _quiz = Quiz();
 
   @override
   Widget build(BuildContext context) => Column(
@@ -49,7 +48,7 @@ class _QuizPageState extends State<QuizPage> {
               padding: EdgeInsets.all(10.0),
               child: Center(
                 child: Text(
-                  quiz.getQuestionText(questionIndex),
+                  _quiz.getQuestionText,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 25.0,
@@ -74,9 +73,7 @@ class _QuizPageState extends State<QuizPage> {
                     fontSize: 15.0,
                   ),
                 ),
-                onPressed: () => setState(
-                  () => answerQuestion(true),
-                ),
+                onPressed: () => answerQuestion(true),
               ),
             ),
           ),
@@ -95,19 +92,17 @@ class _QuizPageState extends State<QuizPage> {
                     fontSize: 15.0,
                   ),
                 ),
-                onPressed: () => setState(
-                  () => answerQuestion(false),
-                ),
+                onPressed: () => answerQuestion(false),
               ),
             ),
           ),
-          Row(children: score)
+          Row(children: _score)
         ],
       );
 
   void answerQuestion(bool answer) {
-    score.add(
-      quiz.getQuestionAnswer(questionIndex) == answer
+    _score.add(
+      _quiz.getQuestionAnswer == answer
           ? Icon(
               Icons.check,
               color: Colors.green,
@@ -118,8 +113,37 @@ class _QuizPageState extends State<QuizPage> {
             ),
     );
 
-    if (quiz.getNumberOfQuestions > questionIndex + 1) {
-      questionIndex++;
-    }
+    setState(() {
+      _quiz.nextQuestion();
+      if (_quiz.isQuizFinished) {
+        showAlert();
+      }
+    });
   }
+
+  void showAlert() => Alert(
+        context: context,
+        type: AlertType.success,
+        title: "QUIZ END",
+        desc: "You completed the quiz",
+        buttons: [
+          DialogButton(
+            onPressed: () {
+              setState(() {
+                Navigator.pop(context);
+                _quiz = Quiz();
+                _score = <Icon>[];
+              });
+            },
+            width: 120,
+            child: Text(
+              "COOL",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+              ),
+            ),
+          )
+        ],
+      ).show();
 }
