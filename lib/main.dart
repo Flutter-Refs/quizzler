@@ -7,6 +7,8 @@ void main() {
 }
 
 class Quizzler extends StatelessWidget {
+  const Quizzler({super.key});
+
   @override
   Widget build(BuildContext context) => MaterialApp(
         home: Scaffold(
@@ -29,18 +31,31 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+  List<Icon> score = [];
+  List<String> questions = [
+    "Did the math book look sad because it had too many problems?",
+    "Is it possible to \"accidentally\" laugh and snort milk out of your nose?",
+    "Can you tickle yourself and genuinely find it funny?",
+    "Did the tomato turn red because it saw the salad dressing?",
+    "Is it possible to trust a burrito entirely?",
+  ];
+  List<bool> answers = [true, true, false, false, true];
+
+  int questionIndex = 0;
+
   @override
   Widget build(BuildContext context) => Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // Question
           Expanded(
             flex: 5,
             child: Padding(
               padding: EdgeInsets.all(10.0),
               child: Center(
                 child: Text(
-                  'This is where the question text will go.',
+                  questions[questionIndex],
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 25.0,
@@ -50,6 +65,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
             ),
           ),
+          // True btn
           Expanded(
             child: Padding(
               padding: EdgeInsets.all(15.0),
@@ -64,10 +80,13 @@ class _QuizPageState extends State<QuizPage> {
                     fontSize: 15.0,
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () => setState(
+                  () => answerQuestion(true),
+                ),
               ),
             ),
           ),
+          // False btn
           Expanded(
             child: Padding(
               padding: EdgeInsets.all(15.0),
@@ -82,10 +101,31 @@ class _QuizPageState extends State<QuizPage> {
                     fontSize: 15.0,
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () => setState(
+                  () => answerQuestion(false),
+                ),
               ),
             ),
           ),
+          Row(children: score)
         ],
       );
+
+  void answerQuestion(bool answer) {
+    score.add(
+      answers[questionIndex] == answer
+          ? Icon(
+              Icons.check,
+              color: Colors.green,
+            )
+          : Icon(
+              Icons.close,
+              color: Colors.red,
+            ),
+    );
+
+    if (questions.length > questionIndex + 1) {
+      questionIndex++;
+    }
+  }
 }
